@@ -3586,6 +3586,9 @@ MonoBehaviour:
   - The bridge was painted last spring.
   - Tea leaves steep for three minutes.
   - The attic smells like cedar wood.
+  showViews: 1
+  interpolateViews: 1
+  viewsOutsidePlayMode: 0
   seed: 1234
   separateWorldSeed: 0
   worldSeed: 1234
@@ -3600,13 +3603,10 @@ MonoBehaviour:
   memoCapacity: 262144
   textStyle: 0
   defaultBrain: {fileID: 1040671848}
-  tickLimit: 0
+  tickLimit: 1000
   wallClockMinutes: 0
   stopFile: 
   stopOnExtinction: 0
-  showViews: 1
-  interpolateViews: 1
-  viewsOutsidePlayMode: 0
 --- !u!4 &1819779174
 Transform:
   m_ObjectHideFlags: 0

@@ -1,0 +1,17 @@
+﻿<Solution>
+  <Project Path="EvoSim.Neuro.csproj" />
+  <Project Path="EvoSim.Runtime.csproj" />
+  <Project Path="EvoSim.Testing.csproj" />
+  <Project Path="EvoSim.Editor.csproj" />
+  <Project Path="EvoSim.Samples.csproj" />
+  <Project Path="EvoSim.Http.csproj" />
+  <Project Path="EvoSim.Tests.Neuro.csproj" />
+  <Project Path="Assembly-CSharp.csproj" />
+  <Project Path="EvoSim.Tests.EditMode.csproj" />
+  <Project Path="EvoSim.Tests.PlayMode.csproj" />
+  <Project Path="Student.Editor.csproj" />
+  <Project Path="EvoSim.Neuro.Editor.csproj" />
+  <Project Path="Student.csproj" />
+  <Project Path="Assembly-CSharp-Editor.csproj" />
+  <Project Path="Student.Tests.csproj" />
+</Solution>
