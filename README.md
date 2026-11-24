@@ -11,6 +11,8 @@
 > prototype: [`prototype/`](prototype/README.md) · contract and proposed Unity architecture:
 > [`Docs/Interface/`](Docs/Interface/README.md).
 
+> **EvoSim model servers** (JEV + Ollama mutator, via an SSH tunnel to the room machines): [`Tools/EvoSimServers/README.md`](Tools/EvoSimServers/README.md).
+
 ------
 
 - [Course organisation](#Courseorganisation)
