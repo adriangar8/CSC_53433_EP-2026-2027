@@ -72,3 +72,6 @@ crashlytics-build.properties
 
 .vscode/
 *.slnx
+
+# EvoSim model servers: personal settings
+Tools/EvoSimServers/servers.local.env
