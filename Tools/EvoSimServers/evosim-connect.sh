@@ -301,6 +301,17 @@ forward() {
     fi
 }
 
+# after_setup MACHINE: setup does not start anything, so say loudly what to do next
+after_setup() {
+    say ""
+    say "  ============================================================================"
+    say "  Setup is NOT the end: if the log above ends with 'Setup done', RUN IT AGAIN:"
+    say "      ./evosim-connect.sh"
+    say "  The second run starts your servers (JEV: 2-10 min) and opens the tunnel."
+    say "  ============================================================================"
+    say "  Remind your team: add  $1:$X_LOGIN  to REGISTRY in their servers.local.env."
+}
+
 own_flow() {
     scan_machines
     if [ -n "$OWN_AT" ]; then
@@ -319,7 +330,7 @@ own_flow() {
     if ask "run setup on $BEST_AT now (~30 min, ~55 GB in /Data/$X_LOGIN)?"; then
         save_my_machine "$BEST_AT"
         forward "$BEST_AT" setup
-        say "  Setup finished (see the log above). Next: ./evosim-connect.sh   (it starts your servers and opens the tunnel)"
+        after_setup "$BEST_AT"
     else
         say "  Later: ./evosim-connect.sh setup   (or set MY_MACHINE in servers.local.env and run it)"
     fi
@@ -419,6 +430,7 @@ cmd_machine() {
         save_my_machine "$BEST_AT"
     fi
     forward "$MY_MACHINE" "$sub"
+    if [ "$sub" = setup ]; then after_setup "$MY_MACHINE"; fi
 }
 
 if [ "$DRY" = 1 ]; then

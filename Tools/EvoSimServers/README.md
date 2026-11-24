@@ -92,6 +92,9 @@ Known good: vendee (RTX 4000 Ada, 20 GB), albatros / hibou / verdier (RTX A5000,
 ./evosim-connect.sh setup
 ```
 
+> **Setup starts nothing.** When it ends (the log says `Setup done`), **run `./evosim-connect.sh` again**: that second run
+> starts your servers (JEV: 2-10 min) and opens the tunnel. The script prints this reminder too.
+
 It copies `evosim-servers.sh` to the machine and runs the setup there, detached from your ssh login: if the connection drops,
 rerun the same command to follow it again. By hand: `scp evosim-servers.sh <login>@<machine>.polytechnique.fr:` then `ssh` there and `bash evosim-servers.sh setup`.
 
@@ -108,6 +111,10 @@ Other commands on the machine: `bash ~/evosim-servers.sh status`, `logs jev`, `l
 Your ports there come from your user id (JEV = 20000 + uid % 10000, Ollama = JEV + 10000) and can be changed in `/Data/<login>/evosim/config.env`.
 
 ## Sharing your servers with teammates
+
+**Rule: whenever you set up servers on a machine, add it to your own `servers.local.env` and tell the team**
+(the script reminds you after a setup); each teammate then adds the entry to theirs. The committed `servers.example.env`
+stays empty: this repository is public.
 
 Tell them your machine and login. They add `machine:your.login` to their `REGISTRY` (or `machine:jev_port:ollama_port`, from
 `bash ~/evosim-servers.sh ssh-config` on the machine) in their own `servers.local.env`. Only your account can start or stop
