@@ -3,6 +3,8 @@
 #
 #   ./evosim-connect.sh [connect]   connect Unity's localhost:8000 / :11434 to running servers: yours or a
 #                                   teammate's. If none is healthy, helps you start or set up your own.
+#   ./evosim-connect.sh -b          connect, with the tunnel in the background (ssh -f); no terminal to keep open
+#   ./evosim-connect.sh disconnect  close a background tunnel (kills only the ssh processes holding 8000 / 11434)
 #   ./evosim-connect.sh status      local ports, active tunnel, health of every registry entry
 #   ./evosim-connect.sh start       forward to evosim-servers.sh on MY_MACHINE (also: stop, setup)
 #   --dry-run                       print what would be run (ssh, curl, lsof) and run nothing
@@ -22,10 +24,12 @@ die()  { printf '  FAIL  %s\n' "$*" >&2; exit 1; }
 show() { printf '  dry   %s\n' "$*"; }
 
 DRY=0
+BG=0
 CMD=""
 for a in "$@"; do
     case $a in
         --dry-run) DRY=1 ;;
+        -b | --background) BG=1 ;;
         -h | --help | help) CMD=help ;;
         *) [ -n "$CMD" ] || CMD=$a ;;
     esac
@@ -232,10 +236,26 @@ discover() {
 
 open_tunnel() {
     say ""
-    say "  Tunnel to $T_MACHINE: 8000 -> $T_JEV, 11434 -> $T_OLL. Leave this terminal open; close it with Ctrl+C (never Ctrl+Z)."
+    if [ "$BG" = 1 ]; then
+        say "  Tunnel to $T_MACHINE: 8000 -> $T_JEV, 11434 -> $T_OLL, in the background."
+    else
+        say "  Tunnel to $T_MACHINE: 8000 -> $T_JEV, 11434 -> $T_OLL. Leave this terminal open; close it with Ctrl+C (never Ctrl+Z)."
+    fi
     say "  Check in a second terminal:  curl -s localhost:8000/v1/models   and   curl -s localhost:11434/api/tags"
     say "  Then in Unity: Window > EvoSim > Brain Health > Test connection (every host \"reachable\")."
     say ""
+    if [ "$BG" = 1 ]; then
+        ssh -f -N -L "8000:127.0.0.1:$T_JEV" -L "11434:127.0.0.1:$T_OLL" \
+            -o ExitOnForwardFailure=yes -o ServerAliveInterval=30 "${SSH_OPTS_I[@]}" "$X_LOGIN@$(host_of "$T_MACHINE")" \
+            || die "could not open the background tunnel"
+        sleep 2
+        if local_jev_ok && local_mut_ok; then
+            ok "tunnel running in the background (pid $(port_pids 8000 | head -n 1)); close it with: ./evosim-connect.sh disconnect"
+        else
+            warn "tunnel opened but the ports do not answer yet: ./evosim-connect.sh status"
+        fi
+        return 0
+    fi
     exec ssh -N -L "8000:127.0.0.1:$T_JEV" -L "11434:127.0.0.1:$T_OLL" \
         -o ExitOnForwardFailure=yes -o ServerAliveInterval=30 "${SSH_OPTS_I[@]}" "$X_LOGIN@$(host_of "$T_MACHINE")"
 }
@@ -318,7 +338,7 @@ own_flow() {
         if ask "start your servers on $OWN_AT now (JEV needs 2-10 min)?"; then
             [ "$OWN_AT" = "$MY_MACHINE" ] || save_my_machine "$OWN_AT"
             forward "$OWN_AT" start
-            try_entry "$OWN_AT:$X_LOGIN" && open_tunnel
+            if try_entry "$OWN_AT:$X_LOGIN"; then open_tunnel; return 0; fi
             die "servers started on $OWN_AT but not healthy yet: ./evosim-connect.sh status"
         fi
         say "  Start them later with: ./evosim-connect.sh start"
@@ -364,8 +384,8 @@ plan() {
             done
             [ -n "$first" ] || warn "MY_MACHINE and REGISTRY are both empty: nothing to probe, so step 4 applies"
             say "   remote script: curl 127.0.0.1:<jev>/health, /v1/models (jev-decision), 127.0.0.1:<ollama>/api/tags ($MUTATOR_MODEL)"
-            say "4. if one is healthy, open the tunnel (foreground)"
-            show "ssh -N -L 8000:127.0.0.1:<jev> -L 11434:127.0.0.1:<ollama> -o ExitOnForwardFailure=yes -o ServerAliveInterval=30 ${SSH_OPTS_I[*]} $X_LOGIN@<machine>.$DOMAIN"
+            say "4. if one is healthy, open the tunnel ($([ "$BG" = 1 ] && echo background || echo foreground))"
+            show "ssh $( [ "$BG" = 1 ] && printf %s "-f ")-N -L 8000:127.0.0.1:<jev> -L 11434:127.0.0.1:<ollama> -o ExitOnForwardFailure=yes -o ServerAliveInterval=30 ${SSH_OPTS_I[*]} $X_LOGIN@<machine>.$DOMAIN"
             say "5. otherwise look for your own install and free GPU memory on: ${MY_MACHINE:+$MY_MACHINE }$CANDIDATE_MACHINES"
             for m in $MY_MACHINE $CANDIDATE_MACHINES; do
                 show "ssh ${SSH_OPTS[*]} $X_LOGIN@$(host_of "$m") bash -s   # own install? nvidia-smi free MiB"
@@ -380,6 +400,9 @@ plan() {
                 IFS=: read -r m x y <<< "$e"
                 show "ssh ${SSH_OPTS[*]} $X_LOGIN@$(host_of "$m") bash -s -- <probe for $x${y:+:$y}>"
             done
+            ;;
+        disconnect)
+            show "port holders of 8000 and 11434 (lsof / ss); kill only those whose command is ssh"
             ;;
         start | stop | setup)
             [ -n "$MY_MACHINE" ] || warn "MY_MACHINE is empty: the real run would scan $CANDIDATE_MACHINES first"
@@ -399,7 +422,7 @@ cmd_connect() {
     fi
     free_ports
     say "== looking for running servers"
-    if discover; then open_tunnel; fi
+    if discover; then open_tunnel; return 0; fi
     say "== no healthy servers found"
     own_flow
 }
@@ -419,6 +442,20 @@ cmd_status() {
     [ -n "$(entries)" ] || warn "MY_MACHINE and REGISTRY are empty: nothing to probe"
 }
 
+cmd_disconnect() {
+    local p pid cmd n=0
+    for p in 8000 11434; do
+        for pid in $(port_pids "$p" | sort -u); do
+            cmd=$(ps -o command= -p "$pid" 2> /dev/null || true)
+            case $cmd in
+                ssh\ * | */ssh\ *) kill "$pid" 2> /dev/null || true; ok "ssh tunnel pid $pid stopped"; n=$((n + 1)) ;;
+                *) warn "port $p is held by pid $pid (${cmd:0:60}), not an ssh tunnel: left alone" ;;
+            esac
+        done
+    done
+    [ "$n" -gt 0 ] || ok "no ssh tunnel on 8000 / 11434"
+}
+
 cmd_machine() {
     local sub=$1
     if [ -z "$MY_MACHINE" ]; then
@@ -434,12 +471,13 @@ cmd_machine() {
 }
 
 if [ "$DRY" = 1 ]; then
-    case $CMD in connect | status | start | stop | setup) plan; exit 0 ;; esac
+    case $CMD in connect | status | start | stop | setup | disconnect) plan; exit 0 ;; esac
 fi
 
 case $CMD in
     connect) cmd_connect ;;
     status) cmd_status ;;
+    disconnect) cmd_disconnect ;;
     start | stop | setup) cmd_machine "$CMD" ;;
-    *) die "unknown command '$CMD': connect, status, start, stop, setup (--dry-run, --help)" ;;
+    *) die "unknown command '$CMD': connect, status, start, stop, setup, disconnect (-b, --dry-run, --help)" ;;
 esac

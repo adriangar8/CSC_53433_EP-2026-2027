@@ -19,6 +19,8 @@ set up your own on a free machine. Leave the terminal it opens running while Uni
 | Command | What it does |
 |---|---|
 | `./evosim-connect.sh [connect]` | Steps: already connected? → free stale ports → probe the registry → tunnel; else start/set up your own |
+| `./evosim-connect.sh -b` | Same as `connect`, with the tunnel in the background (`ssh -f`): no terminal to keep open. It does not reconnect if the network drops or the laptop sleeps: rerun it |
+| `./evosim-connect.sh disconnect` | Closes a background tunnel (kills only ssh processes holding 8000 / 11434) |
 | `./evosim-connect.sh status` | Local ports, who holds them, health of every registry entry |
 | `./evosim-connect.sh start` / `stop` / `setup` | Run `evosim-servers.sh` on your machine (`MY_MACHINE`), copying it there if missing or changed |
 
@@ -105,10 +107,12 @@ rerun the same command to follow it again. By hand: `scp evosim-servers.sh <logi
 
 1. Start (JEV needs 2-10 min; the servers keep running after you log out): `./evosim-connect.sh start`
    (by hand: `ssh <machine> 'bash ~/evosim-servers.sh start'`).
-2. Tunnel: `./evosim-connect.sh` (it finds your servers and opens it). Leave that terminal open; Ctrl+C closes it, never Ctrl+Z.
+2. Tunnel: `./evosim-connect.sh` (it finds your servers and opens it). Leave that terminal open; Ctrl+C closes it, never Ctrl+Z (or use `-b` to run it in the background and `disconnect` to close it).
 3. Check with the two `curl` commands above.
 4. Unity: Window > EvoSim > Brain Health > Test connection.
-5. When done: Ctrl+C the tunnel, then `./evosim-connect.sh stop`.
+5. When done: Ctrl+C the tunnel (or `./evosim-connect.sh disconnect`), then `./evosim-connect.sh stop`.
+
+Is it on? `./evosim-connect.sh status` any time: local ports, who holds them, and each server's health from the machine itself.
 
 Other commands on the machine: `bash ~/evosim-servers.sh status`, `logs jev`, `logs ollama`, `start jev`, `stop ollama`.
 Your ports there come from your user id (JEV = 20000 + uid % 10000, Ollama = JEV + 10000) and can be changed in `/Data/<login>/evosim/config.env`.
