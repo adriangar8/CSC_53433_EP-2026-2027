@@ -49,7 +49,7 @@ Path B by hand, or WSL / Git Bash with `evosim-connect.sh`.
 | Variable | Meaning |
 |---|---|
 | `X_LOGIN` | your Polytechnique login (required) |
-| `CANDIDATE_MACHINES` | machines scanned for your install and free GPU memory (default `vendee albatros hibou verdier`) |
+| `CANDIDATE_MACHINES` | machines scanned for your install and free GPU memory (default `vendee albatros hibou verdier france vanda`; the full list of room machines is on the [DSI page](https://portail.polytechnique.edu/dsi/salles-informatiques/liste-des-ordinateurs)) |
 | `REGISTRY` | servers to try first, space separated: `machine:owner_login` (ports computed from that owner's uid and their `config.env`) or `machine:jev_port:ollama_port` |
 | `MY_MACHINE` | the machine holding your own install; written by the script after a setup |
 | `MUTATOR_MODEL` | must match the MutatorService's Model in Unity (default `gemma4:26b`) |
@@ -83,6 +83,9 @@ If the servers are stopped, only the account that started them can start them: a
 **Pick a machine** (`./evosim-connect.sh` proposes the one with the most free GPU memory):
 an NVIDIA GPU with 15 GB or more (FP8, the reference; below that JEV runs in 4-bit, less accurate) and about 32 GB of RAM.
 Known good: vendee (RTX 4000 Ada, 20 GB), albatros / hibou / verdier (RTX A5000, 24 GB), all 62 GB RAM.
+Also candidates: france (RTX A4000, 16 GB, 124 GB RAM) and vanda (RTX 2000 Ada, 16 GB, 61 GB RAM). Their 16 GB cards are
+just above FP8's 15 GB minimum, so they only work when almost nothing else uses the GPU (checked once, not run yet).
+Any machine on the DSI list may have a GPU: add it to `CANDIDATE_MACHINES` after checking with `nvidia-smi`.
 **One JEV per GPU**: vLLM takes 90 % of it; if someone already runs JEV on a machine, use another (`nvidia-smi` shows the memory in use).
 **Always reuse the same machine**: everything goes to `/Data/<login>/evosim`, local to that machine (the script remembers it in `MY_MACHINE`).
 
