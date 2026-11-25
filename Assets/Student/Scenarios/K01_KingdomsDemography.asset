@@ -1,0 +1,154 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7a848ffdcb441a8448c1b33aeb415ce1, type: 3}
+  m_Name: K01_KingdomsDemography
+  m_EditorClassIdentifier: EvoSim.Runtime::EvoSim.ScenarioAsset
+  title: K01 Kingdoms demography
+  scene: Assets/EvoSim/Scenes/Kingdoms.unity
+  set: []
+  variants:
+  - name: base
+    brain: 
+    tier: 
+    set: []
+    remove: []
+  - name: mat75
+    brain: 
+    tier: 
+    set:
+    - path: red/MatingRule/maturity
+      value: 75
+    - path: blue/MatingRule/maturity
+      value: 75
+    remove: []
+  - name: mat50
+    brain: 
+    tier: 
+    set:
+    - path: red/MatingRule/maturity
+      value: 50
+    - path: blue/MatingRule/maturity
+      value: 50
+    remove: []
+  - name: kill25
+    brain: 
+    tier: 
+    set:
+    - path: red/Diet/killChance
+      value: 0.25
+    - path: blue/Diet/killChance
+      value: 0.25
+    remove: []
+  - name: army30
+    brain: 
+    tier: 
+    set:
+    - path: red/Species/initialPopulation
+      value: 12
+    - path: blue/Species/initialPopulation
+      value: 12
+    - path: red/FloorRule/floor
+      value: 4
+    - path: blue/FloorRule/floor
+      value: 4
+    - path: red/CapRule/cap
+      value: 30
+    - path: blue/CapRule/cap
+      value: 30
+    remove: []
+  - name: mat75_kill25
+    brain: 
+    tier: 
+    set:
+    - path: red/MatingRule/maturity
+      value: 75
+    - path: blue/MatingRule/maturity
+      value: 75
+    - path: red/Diet/killChance
+      value: 0.25
+    - path: blue/Diet/killChance
+      value: 0.25
+    remove: []
+  - name: mat75_army30
+    brain: 
+    tier: 
+    set:
+    - path: red/MatingRule/maturity
+      value: 75
+    - path: blue/MatingRule/maturity
+      value: 75
+    - path: red/Species/initialPopulation
+      value: 12
+    - path: blue/Species/initialPopulation
+      value: 12
+    - path: red/FloorRule/floor
+      value: 4
+    - path: blue/FloorRule/floor
+      value: 4
+    - path: red/CapRule/cap
+      value: 30
+    - path: blue/CapRule/cap
+      value: 30
+    remove: []
+  - name: mat50_army30
+    brain: 
+    tier: 
+    set:
+    - path: red/MatingRule/maturity
+      value: 50
+    - path: blue/MatingRule/maturity
+      value: 50
+    - path: red/Species/initialPopulation
+      value: 12
+    - path: blue/Species/initialPopulation
+      value: 12
+    - path: red/FloorRule/floor
+      value: 4
+    - path: blue/FloorRule/floor
+      value: 4
+    - path: red/CapRule/cap
+      value: 30
+    - path: blue/CapRule/cap
+      value: 30
+    remove: []
+  - name: mat75_kill25_army30
+    brain: 
+    tier: 
+    set:
+    - path: red/MatingRule/maturity
+      value: 75
+    - path: blue/MatingRule/maturity
+      value: 75
+    - path: red/Diet/killChance
+      value: 0.25
+    - path: blue/Diet/killChance
+      value: 0.25
+    - path: red/Species/initialPopulation
+      value: 12
+    - path: blue/Species/initialPopulation
+      value: 12
+    - path: red/FloorRule/floor
+      value: 4
+    - path: blue/FloorRule/floor
+      value: 4
+    - path: red/CapRule/cap
+      value: 30
+    - path: blue/CapRule/cap
+      value: 30
+    remove: []
+  seeds: 01000000020000000300000004000000
+  ticks: 5000
+  brain: Random
+  expect:
+  - invariants
+  - deterministic
+  tier: T2
