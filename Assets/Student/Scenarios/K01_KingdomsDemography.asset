@@ -251,28 +251,7 @@ MonoBehaviour:
     - path: blue/CapRule/mode
       value: Block
     remove: []
-  - name: ctrl_shuffled
-    brain: 
-    tier: 
-    set:
-    - path: World/shuffledGenes
-      value: true
-    remove: []
-  - name: ctrl_nomut
-    brain: 
-    tier: 
-    set:
-    - path: World/noMutation
-      value: true
-    remove: []
-  - name: ctrl_randfounders
-    brain: 
-    tier: 
-    set:
-    - path: World/randomFounders
-      value: true
-    remove: []
-  seeds: 01000000020000000300000004000000
+  seeds: 0100000002000000030000000400000005000000060000000700000008000000090000000a0000000b0000000c0000000d0000000e0000000f0000001000000011000000120000001300000014000000
   ticks: 5000
   brain: Random
   expect:
