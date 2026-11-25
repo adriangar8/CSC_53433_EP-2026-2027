@@ -1,9 +1,11 @@
 # Unity MCP (optional): let Claude Code drive the Unity Editor
 
-Status: tested on macOS (Unity 6000.3.9f1) on 2026-11-25. Windows: not yet verified (Prakhar: date and result here).
+Status: macOS: verified end to end on 2026-11-25 (Unity 6000.3.9f1, Claude Code 2.1.294, uv 0.12.10). Windows: not yet verified (Prakhar: date and result here).
 
 [MCP for Unity](https://github.com/CoplayDev/unity-mcp) lets Claude Code drive the open Unity Editor: read the Console,
 inspect the hierarchy, enter Play mode, run tests, recompile, take screenshots. **Optional: nobody has to use it.**
+
+Not using it? Nothing to do. You may see `MCP-FOR-UNITY` lines in the Console; ignore them.
 
 ## Rules
 
@@ -70,7 +72,7 @@ claude mcp add UnityMCP --scope local --transport stdio -e DISABLE_TELEMETRY=tru
 | Symptom | Fix |
 |---|---|
 | macOS: Claude or `uv` not found by Unity | Unity launched from the Hub doesn't get the shell PATH. Set the Claude/uv paths in the MCP window, or launch the Hub from Terminal |
-| `Port 6401 not released yet` warnings after Play mode | Harmless |
+| `Port 64xx not released yet` / `falling back to port 64xx` warnings after Play mode or a recompile | Harmless: the bridge moves to the next port and the server follows it |
 | One call times out | Retry once |
 | `ScriptTemplatesCompile` / `StubsCompile` fail through the MCP | Rerun them in the Test Runner |
 | `RegressionTests.PinnedHashes` (Lab1_Small/1234/scripted-prey) fails | Already fails on master, unrelated to the MCP |
