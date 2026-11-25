@@ -15,6 +15,7 @@ For humans and AI agents working in this repo.
 - Don't hand-edit `.unity` / `.prefab` YAML unless there is no other way. Prefer editor scripts or scene builders (example: `Assets/Student/Editor/AlarmCallsScene.cs`).
 - Let Unity create `.meta` files and commit them with their asset.
 - Only one person edits a given scene at a time, and says so.
+- Unity MCP: follow `Docs/Kingdoms/UNITY-MCP.md`; never edit or save shared scenes through the MCP.
 
 ## Git
 

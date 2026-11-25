@@ -35,5 +35,5 @@ Grading grid (out of 20) as a tracker. Status: todo / doing / done.
 |---|---|---|---|---|
 | Model servers guide | doing | | | `Tools/EvoSimServers/README.md` |
 | Team docs | doing | | | `Docs/Kingdoms/` |
-| Unity MCP | todo | | | |
+| Unity MCP | done | Karl | | `Docs/Kingdoms/UNITY-MCP.md` |
 | Scene builder for Kingdoms | todo | | | |
