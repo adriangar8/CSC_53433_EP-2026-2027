@@ -14,7 +14,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: EvoSim.Runtime::EvoSim.ScenarioAsset
   title: K01 Kingdoms demography
   scene: Assets/EvoSim/Scenes/Kingdoms.unity
-  set: []
+  set:
+  - path: World/noMutation
+    value: true
   variants:
   - name: base
     brain: 
@@ -168,6 +170,107 @@ MonoBehaviour:
       value: 30
     - path: blue/CapRule/cap
       value: 30
+    remove: []
+  - name: mat50_kill25
+    brain: 
+    tier: 
+    set:
+    - path: red/MatingRule/maturity
+      value: 50
+    - path: red/AgeSense/maturity
+      value: 50
+    - path: blue/MatingRule/maturity
+      value: 50
+    - path: blue/AgeSense/maturity
+      value: 50
+    - path: red/Diet/killChance
+      value: 0.25
+    - path: blue/Diet/killChance
+      value: 0.25
+    remove: []
+  - name: mat50_litter12
+    brain: 
+    tier: 
+    set:
+    - path: red/MatingRule/maturity
+      value: 50
+    - path: red/AgeSense/maturity
+      value: 50
+    - path: blue/MatingRule/maturity
+      value: 50
+    - path: blue/AgeSense/maturity
+      value: 50
+    - path: red/Litter/min
+      value: 1
+    - path: red/Litter/max
+      value: 2
+    - path: blue/Litter/min
+      value: 1
+    - path: blue/Litter/max
+      value: 2
+    remove: []
+  - name: mat50_kill25_litter12
+    brain: 
+    tier: 
+    set:
+    - path: red/MatingRule/maturity
+      value: 50
+    - path: red/AgeSense/maturity
+      value: 50
+    - path: blue/MatingRule/maturity
+      value: 50
+    - path: blue/AgeSense/maturity
+      value: 50
+    - path: red/Diet/killChance
+      value: 0.25
+    - path: blue/Diet/killChance
+      value: 0.25
+    - path: red/Litter/min
+      value: 1
+    - path: red/Litter/max
+      value: 2
+    - path: blue/Litter/min
+      value: 1
+    - path: blue/Litter/max
+      value: 2
+    remove: []
+  - name: mat50_block
+    brain: 
+    tier: 
+    set:
+    - path: red/MatingRule/maturity
+      value: 50
+    - path: red/AgeSense/maturity
+      value: 50
+    - path: blue/MatingRule/maturity
+      value: 50
+    - path: blue/AgeSense/maturity
+      value: 50
+    - path: red/CapRule/mode
+      value: Block
+    - path: blue/CapRule/mode
+      value: Block
+    remove: []
+  - name: ctrl_shuffled
+    brain: 
+    tier: 
+    set:
+    - path: World/shuffledGenes
+      value: true
+    remove: []
+  - name: ctrl_nomut
+    brain: 
+    tier: 
+    set:
+    - path: World/noMutation
+      value: true
+    remove: []
+  - name: ctrl_randfounders
+    brain: 
+    tier: 
+    set:
+    - path: World/randomFounders
+      value: true
     remove: []
   seeds: 01000000020000000300000004000000
   ticks: 5000

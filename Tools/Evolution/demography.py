@@ -61,10 +61,16 @@ def analyse(run, warmup):
         maturity = setting(info, sp, "MatingRule/maturity", DEFAULT_MATURITY)
         floor = setting(info, sp, "FloorRule/floor", DEFAULT_FLOOR)
         cap = setting(info, sp, "CapRule/cap", DEFAULT_CAP)
+        ticks = summary.get("ticks", 0)
+        windows = [(a, a + 500) for a in range(warmup, ticks - 499, 500)]    # whole 500-tick windows after t0
+        self_sustaining = (sum(not any(a <= e["t"] < b for e in immigrants) for a, b in windows) / len(windows)) if windows else float("nan")
         pops = [int(r[sp + "_pop"]) for r in stats if r.get(sp + "_pop")]
         row = {
             "variant": variant, "seed": seed, "species": sp,
             "births": len(births), "immigrants": len(immigrants),
+            "born_share": len(births) / max(1, len(births) + len(immigrants)),
+            "self_sustaining": self_sustaining,
+            "minutes": summary.get("minutes", float("nan")),
             "birth_ratio": len(births) / max(1, len(immigrants)),
             "max_gen": max([e["gen"] for e in mine if e["kind"] == "birth"], default=0),
             "adult_death_share": sum(d["age"] >= maturity for d in deaths) / len(deaths) if deaths else 0.0,
@@ -101,6 +107,7 @@ def main():
 
     variants = list(dict.fromkeys(r["variant"] for r in rows))
     species = sorted({r["species"] for r in rows})
+    first_sp = "red" if "red" in species else species[0]
     by = lambda v, sp=None: [r for r in rows if r["variant"] == v and (sp is None or r["species"] == sp)]
 
     print(f"Warm-up t0 = {args.warmup}. Cells are mean (min-max) over seeds.\n")
@@ -114,6 +121,16 @@ def main():
                   f"{fmt([r['adult_death_share'] for r in g], 2)} | {fmt([r['median_age_at_death'] for r in g], 0)} | "
                   f"{fmt([r['kills'] for r in g], 0)} | {fmt([r['at_floor'] for r in g], 2)} | {fmt([r['at_cap'] for r in g], 2)} |")
 
+    print("\nBorn share = births / (births + immigrants) after t0; self-sustaining = share of whole 500-tick windows after t0 with no immigrant; wall minutes per run.\n")
+    print("| variant | species | born share mean (min over seeds) | self-sustaining mean (min) | kill ratio per seed | min |")
+    print("|---|---|---|---|---|---|")
+    for v in variants:
+        for sp in species:
+            g = by(v, sp)
+            bs, ss = [r["born_share"] for r in g], [r["self_sustaining"] for r in g]
+            kr = ", ".join(f"s{r['seed']}:{r['kill_ratio']:.2f}" for r in by(v, first_sp) ) if sp == first_sp else ""
+            print(f"| {v} | {sp} | {statistics.mean(bs):.2f} ({min(bs):.2f}) | {statistics.mean(ss):.2f} ({min(ss):.2f}) | {kr} | {statistics.mean(r['minutes'] for r in g):.1f} |")
+
     actions = sorted({k for r in rows for k in r if k.startswith("act_")})
     print("\nAction shares (mean over seeds):\n")
     print("| variant | species | " + " | ".join(a[4:] for a in actions) + " |")
@@ -123,8 +140,8 @@ def main():
             g = by(v, sp)
             print(f"| {v} | {sp} | " + " | ".join(f"{statistics.mean(r.get(a, 0) for r in g):.2f}" for a in actions) + " |")
 
-    print("\n| variant | (1) births > immigrants, every seed, both | (2) max gen >= 10, every seed, both | (3) mean kill ratio red/blue in 0.67-1.5 | result |")
-    print("|---|---|---|---|---|")
+    print("\n| variant | (1) births > immigrants, every seed, both | (2) max gen >= 10, every seed, both | (3) mean kill ratio red/blue in 0.67-1.5 | kill ratio range over seeds | result |")
+    print("|---|---|---|---|---|---|")
     first = "red" if "red" in species else species[0]
     for v in variants:
         c1 = all(r["births"] > r["immigrants"] for r in by(v))
@@ -133,7 +150,7 @@ def main():
         mean_ratio = statistics.mean(ratios)
         c3 = 0.67 <= mean_ratio <= 1.5
         flag = lambda ok: "PASS" if ok else "FAIL"
-        print(f"| {v} | {flag(c1)} | {flag(c2)} | {flag(c3)} ({first}/other {mean_ratio:.2f}) | **{flag(c1 and c2 and c3)}** |")
+        print(f"| {v} | {flag(c1)} | {flag(c2)} | {flag(c3)} ({first}/other {mean_ratio:.2f}) | {min(ratios):.2f}-{max(ratios):.2f} | **{flag(c1 and c2 and c3)}** |")
 
     out = ROOT / "Logs/EvoSim" / time.strftime("demography-%Y%m%d-%H%M%S.csv")
     columns = list(dict.fromkeys(k for r in rows for k in r))
