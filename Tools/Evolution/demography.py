@@ -70,7 +70,6 @@ def analyse(run, warmup):
             "births": len(births), "immigrants": len(immigrants),
             "born_share": len(births) / max(1, len(births) + len(immigrants)),
             "self_sustaining": self_sustaining,
-            "minutes": summary.get("minutes", float("nan")),
             "birth_ratio": len(births) / max(1, len(immigrants)),
             "max_gen": max([e["gen"] for e in mine if e["kind"] == "birth"], default=0),
             "adult_death_share": sum(d["age"] >= maturity for d in deaths) / len(deaths) if deaths else 0.0,
@@ -121,15 +120,15 @@ def main():
                   f"{fmt([r['adult_death_share'] for r in g], 2)} | {fmt([r['median_age_at_death'] for r in g], 0)} | "
                   f"{fmt([r['kills'] for r in g], 0)} | {fmt([r['at_floor'] for r in g], 2)} | {fmt([r['at_cap'] for r in g], 2)} |")
 
-    print("\nBorn share = births / (births + immigrants) after t0; self-sustaining = share of whole 500-tick windows after t0 with no immigrant; wall minutes per run.\n")
-    print("| variant | species | born share mean (min over seeds) | self-sustaining mean (min) | kill ratio per seed | min |")
-    print("|---|---|---|---|---|---|")
+    print("\nBorn share = births / (births + immigrants) after t0; self-sustaining = share of whole 500-tick windows after t0 with no immigrant.\n")
+    print("| variant | species | born share mean (min over seeds) | self-sustaining mean (min) | kill ratio per seed |")
+    print("|---|---|---|---|---|")
     for v in variants:
         for sp in species:
             g = by(v, sp)
             bs, ss = [r["born_share"] for r in g], [r["self_sustaining"] for r in g]
             kr = ", ".join(f"s{r['seed']}:{r['kill_ratio']:.2f}" for r in by(v, first_sp) ) if sp == first_sp else ""
-            print(f"| {v} | {sp} | {statistics.mean(bs):.2f} ({min(bs):.2f}) | {statistics.mean(ss):.2f} ({min(ss):.2f}) | {kr} | {statistics.mean(r['minutes'] for r in g):.1f} |")
+            print(f"| {v} | {sp} | {statistics.mean(bs):.2f} ({min(bs):.2f}) | {statistics.mean(ss):.2f} ({min(ss):.2f}) | {kr} |")
 
     actions = sorted({k for r in rows for k in r if k.startswith("act_")})
     print("\nAction shares (mean over seeds):\n")
