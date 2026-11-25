@@ -3,7 +3,8 @@
 #   Tools/Evolution/run_night.sh K02_KingdomsSelection [--stop HH:MM]          # default stop 07:45 (next occurrence)
 #   Tools/Evolution/run_night.sh K02_KingdomsSelection --only full 1 [--ticks 100]   # a single run (smoke test)
 # Seed-major order (s1: every variant, then s2 ...). No new run starts after the stop time. Before each run both servers must
-# answer (JEV :8000, Ollama :11434; retry every 2 min for 10 min, else the run is skipped and logged).
+# answer (JEV :8000, Ollama :11434; each retry first tries to reconnect the tunnel with evosim-connect.sh -b, every 2 min
+# for 10 min, else the run is skipped and logged). A run that stops on a brain failure is repeated once from scratch.
 # Output: Logs/EvoSim/night-<date>/ with one log per run, night.log and throughput.csv.
 set -uo pipefail
 [ -n "${NIGHT_CAFFEINATED:-}" ] || exec env NIGHT_CAFFEINATED=1 caffeinate -dims "$0" "$@"
@@ -32,6 +33,8 @@ servers_ok() {
     curl -fsS --max-time 5 http://localhost:11434/api/tags 2> /dev/null | grep -qF '"gemma4:26b"'
 }
 
+reconnect() { Tools/EvoSimServers/evosim-connect.sh -b < /dev/null >> "$DIR/night.log" 2>&1; }
+
 # the (variant, seed) pairs, seed-major
 ASSET_FILE=Assets/Student/Scenarios/$ASSET.asset
 if [ -n "$ONLY_V" ]; then PAIRS="$ONLY_S $ONLY_V"; else
@@ -52,14 +55,20 @@ echo "$PAIRS" | while read -r seed variant; do
     waited=0
     until servers_ok; do
         [ $waited -lt 600 ] || break
-        say "servers not answering before $variant s$seed; retry in 2 min"; sleep 120; waited=$((waited + 120))
+        say "servers not answering before $variant s$seed; reconnecting tunnel, retry in 2 min"; reconnect; sleep 120; waited=$((waited + 120))
     done
     servers_ok || { say "SKIPPED $variant s$seed: servers down"; continue; }
     log=$DIR/$variant-s$seed.log
-    say "run $variant s$seed"
-    "$UNITY" -batchmode -nographics -projectPath . -executeMethod KingdomsBatch.RunCommandLine -asset "$ASSET" \
-        -variant "$variant" -seed "$seed" ${TICKS:+-ticks "$TICKS"} -logFile "$log"
-    say "  exit $? ($variant s$seed)"
+    for attempt in 1 2; do
+        say "run $variant s$seed (attempt $attempt)"
+        "$UNITY" -batchmode -nographics -projectPath . -executeMethod KingdomsBatch.RunCommandLine -asset "$ASSET" \
+            -variant "$variant" -seed "$seed" ${TICKS:+-ticks "$TICKS"} -logFile "$log"
+        say "  exit $? ($variant s$seed)"
+        grep -q "stopped: brain failure" "$log" || break
+        say "  brain failure in $variant s$seed; reconnecting and repeating"
+        reconnect; sleep 30
+        servers_ok || break
+    done
 done
 say "night end"
 
