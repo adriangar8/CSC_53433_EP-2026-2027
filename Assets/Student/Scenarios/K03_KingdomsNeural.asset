@@ -1,0 +1,188 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7a848ffdcb441a8448c1b33aeb415ce1, type: 3}
+  m_Name: K03_KingdomsNeural
+  m_EditorClassIdentifier: EvoSim.Runtime::EvoSim.ScenarioAsset
+  title: K03 Kingdoms neural
+  scene: Assets/Student/Scenes/KingdomsNeural.unity
+  set: []
+  variants:
+  - name: base
+    brain: 
+    tier: T2
+    set: []
+    remove: []
+  - name: mat50_kill25
+    brain: 
+    tier: T2
+    set:
+    - path: red/MatingRule/maturity
+      value: 50
+    - path: red/Diet/killChance
+      value: 0.25
+    - path: blue/MatingRule/maturity
+      value: 50
+    - path: blue/Diet/killChance
+      value: 0.25
+    remove: []
+  - name: army20
+    brain: 
+    tier: T2
+    set:
+    - path: red/Species/initialPopulation
+      value: 20
+    - path: red/FloorRule/floor
+      value: 5
+    - path: red/CapRule/cap
+      value: 60
+    - path: blue/Species/initialPopulation
+      value: 20
+    - path: blue/FloorRule/floor
+      value: 5
+    - path: blue/CapRule/cap
+      value: 60
+    remove: []
+  - name: mat50_kill25_army20
+    brain: 
+    tier: T2
+    set:
+    - path: red/MatingRule/maturity
+      value: 50
+    - path: red/Diet/killChance
+      value: 0.25
+    - path: red/Species/initialPopulation
+      value: 20
+    - path: red/FloorRule/floor
+      value: 5
+    - path: red/CapRule/cap
+      value: 60
+    - path: blue/MatingRule/maturity
+      value: 50
+    - path: blue/Diet/killChance
+      value: 0.25
+    - path: blue/Species/initialPopulation
+      value: 20
+    - path: blue/FloorRule/floor
+      value: 5
+    - path: blue/CapRule/cap
+      value: 60
+    remove: []
+  - name: cap20
+    brain: 
+    tier: T2
+    set:
+    - path: red/MatingRule/maturity
+      value: 50
+    - path: red/Diet/killChance
+      value: 0.25
+    - path: red/Species/initialPopulation
+      value: 20
+    - path: red/FloorRule/floor
+      value: 5
+    - path: red/CapRule/cap
+      value: 20
+    - path: blue/MatingRule/maturity
+      value: 50
+    - path: blue/Diet/killChance
+      value: 0.25
+    - path: blue/Species/initialPopulation
+      value: 20
+    - path: blue/FloorRule/floor
+      value: 5
+    - path: blue/CapRule/cap
+      value: 20
+    remove: []
+  - name: cap30
+    brain: 
+    tier: T2
+    set:
+    - path: red/MatingRule/maturity
+      value: 50
+    - path: red/Diet/killChance
+      value: 0.25
+    - path: red/Species/initialPopulation
+      value: 20
+    - path: red/FloorRule/floor
+      value: 5
+    - path: red/CapRule/cap
+      value: 30
+    - path: blue/MatingRule/maturity
+      value: 50
+    - path: blue/Diet/killChance
+      value: 0.25
+    - path: blue/Species/initialPopulation
+      value: 20
+    - path: blue/FloorRule/floor
+      value: 5
+    - path: blue/CapRule/cap
+      value: 30
+    remove: []
+  - name: cap20_nomut
+    brain: 
+    tier: T2
+    set:
+    - path: red/MatingRule/maturity
+      value: 50
+    - path: red/Diet/killChance
+      value: 0.25
+    - path: red/Species/initialPopulation
+      value: 20
+    - path: red/FloorRule/floor
+      value: 5
+    - path: red/CapRule/cap
+      value: 20
+    - path: blue/MatingRule/maturity
+      value: 50
+    - path: blue/Diet/killChance
+      value: 0.25
+    - path: blue/Species/initialPopulation
+      value: 20
+    - path: blue/FloorRule/floor
+      value: 5
+    - path: blue/CapRule/cap
+      value: 20
+    - path: World/noMutation
+      value: true
+    remove: []
+  - name: cap30_nomut
+    brain: 
+    tier: T2
+    set:
+    - path: red/MatingRule/maturity
+      value: 50
+    - path: red/Diet/killChance
+      value: 0.25
+    - path: red/Species/initialPopulation
+      value: 20
+    - path: red/FloorRule/floor
+      value: 5
+    - path: red/CapRule/cap
+      value: 30
+    - path: blue/MatingRule/maturity
+      value: 50
+    - path: blue/Diet/killChance
+      value: 0.25
+    - path: blue/Species/initialPopulation
+      value: 20
+    - path: blue/FloorRule/floor
+      value: 5
+    - path: blue/CapRule/cap
+      value: 30
+    - path: World/noMutation
+      value: true
+    remove: []
+  seeds: 0100000002000000030000000400000005000000
+  ticks: 10000
+  brain: 
+  expect:
+  - invariants
+  tier: T2

@@ -26,7 +26,7 @@ Grading grid (out of 20) as a tracker. Status: todo / doing / done.
 | Agents responding to the surrounding environment | 2 | todo | | | |
 | Agents interacting with other agents | 2 | doing | | | Fighting, mating and following exist in `Assets/EvoSim/Scenes/Kingdoms.unity` |
 | Agents changing the environment | 2 | todo | | | |
-| Agents optimizing their behavior to reach a goal by learning from the interaction | 4 | todo | | | |
+| Agents optimizing their behavior to reach a goal by learning from the interaction | 4 | doing | Karl | rerun on 192 m world after freeze | [EVOLUTION.md](EVOLUTION.md): evolved networks' death rate 0.63 (0.56–0.71) of founders in a common garden, 7 of 10 source runs; drifted control 0.94 |
 | Computation optimized with a compute shader | 2 | todo | | | |
 
 ## Project infrastructure

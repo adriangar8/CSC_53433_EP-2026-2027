@@ -2,6 +2,8 @@
 # run_night.sh - runs every (variant, seed) of a Student scenario asset, one Unity -batchmode launch each (macOS).
 #   Tools/Evolution/run_night.sh K02_KingdomsSelection [--stop HH:MM]          # default stop 07:45 (next occurrence)
 #   Tools/Evolution/run_night.sh K02_KingdomsSelection --only full 1 [--ticks 100]   # a single run (smoke test)
+# The log folder is named after the START date, taken once at launch; --date YYYYMMDD reuses another night's folder (e.g. several
+# --only launches that cross midnight).
 # Seed-major order (s1: every variant, then s2 ...). No new run starts after the stop time. Before each run both servers must
 # answer (JEV :8000, Ollama :11434; each retry first tries to reconnect the tunnel with evosim-connect.sh -b, every 2 min
 # for 10 min, else the run is skipped and logged). A run that stops on a brain failure is repeated once from scratch.
@@ -9,19 +11,20 @@
 set -uo pipefail
 [ -n "${NIGHT_CAFFEINATED:-}" ] || exec env NIGHT_CAFFEINATED=1 caffeinate -dims "$0" "$@"
 
-ASSET=${1:?usage: run_night.sh ASSET [--stop HH:MM] [--only VARIANT SEED] [--ticks N]}; shift
-STOP=07:45; ONLY_V=""; ONLY_S=""; TICKS=""
+ASSET=${1:?usage: run_night.sh ASSET [--stop HH:MM] [--only VARIANT SEED] [--ticks N] [--date YYYYMMDD]}; shift
+STOP=07:45; ONLY_V=""; ONLY_S=""; TICKS=""; NIGHT_DATE=""
 while [ $# -gt 0 ]; do
     case $1 in
         --stop) STOP=$2; shift 2 ;;
         --only) ONLY_V=$2; ONLY_S=$3; shift 3 ;;
         --ticks) TICKS=$2; shift 2 ;;
+        --date) NIGHT_DATE=$2; shift 2 ;;
         *) echo "unknown argument $1" >&2; exit 2 ;;
     esac
 done
 cd "$(dirname "$0")/../.."
 UNITY=${UNITY:-/Applications/Unity/Hub/Editor/6000.3.9f1/Unity.app/Contents/MacOS/Unity}
-DIR=Logs/EvoSim/night-$(date +%Y%m%d); mkdir -p "$DIR"
+DIR=Logs/EvoSim/night-${NIGHT_DATE:-$(date +%Y%m%d)}; mkdir -p "$DIR"        # the start date, once
 say() { echo "$(date +%H:%M:%S) $*" | tee -a "$DIR/night.log"; }
 
 # stop time: the next HH:MM from now
