@@ -54,6 +54,15 @@ MonoBehaviour:
     - path: World/randomFounders
       value: true
     remove: []
+  - name: full_nocache
+    brain: 
+    tier: T4
+    set:
+    - path: Brains/Answer cache/AnswerCache/read
+      value: false
+    - path: Brains/Answer cache/AnswerCache/write
+      value: false
+    remove: []
   seeds: 010000000200000003000000
   ticks: 5000
   brain: JEV
