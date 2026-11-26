@@ -126,6 +126,96 @@ MonoBehaviour:
     - path: blue/Brain/GardenNeuralGenomeGene/sourceRun
       value: Logs/EvoSim/runs/K03_KingdomsNeural-cap20-s9-20261126-153619
     remove: []
+  - name: src-cap20_nomut-s1-20261126-154338
+    brain: 
+    tier: T2
+    set:
+    - path: red/Brain/GardenNeuralGenomeGene/sourceRun
+      value: Logs/EvoSim/runs/K03_KingdomsNeural-cap20_nomut-s1-20261126-154338
+    - path: blue/Brain/GardenNeuralGenomeGene/sourceRun
+      value: Logs/EvoSim/runs/K03_KingdomsNeural-cap20_nomut-s1-20261126-154338
+    remove: []
+  - name: src-cap20_nomut-s10-20261126-154636
+    brain: 
+    tier: T2
+    set:
+    - path: red/Brain/GardenNeuralGenomeGene/sourceRun
+      value: Logs/EvoSim/runs/K03_KingdomsNeural-cap20_nomut-s10-20261126-154636
+    - path: blue/Brain/GardenNeuralGenomeGene/sourceRun
+      value: Logs/EvoSim/runs/K03_KingdomsNeural-cap20_nomut-s10-20261126-154636
+    remove: []
+  - name: src-cap20_nomut-s2-20261126-154358
+    brain: 
+    tier: T2
+    set:
+    - path: red/Brain/GardenNeuralGenomeGene/sourceRun
+      value: Logs/EvoSim/runs/K03_KingdomsNeural-cap20_nomut-s2-20261126-154358
+    - path: blue/Brain/GardenNeuralGenomeGene/sourceRun
+      value: Logs/EvoSim/runs/K03_KingdomsNeural-cap20_nomut-s2-20261126-154358
+    remove: []
+  - name: src-cap20_nomut-s3-20261126-154418
+    brain: 
+    tier: T2
+    set:
+    - path: red/Brain/GardenNeuralGenomeGene/sourceRun
+      value: Logs/EvoSim/runs/K03_KingdomsNeural-cap20_nomut-s3-20261126-154418
+    - path: blue/Brain/GardenNeuralGenomeGene/sourceRun
+      value: Logs/EvoSim/runs/K03_KingdomsNeural-cap20_nomut-s3-20261126-154418
+    remove: []
+  - name: src-cap20_nomut-s4-20261126-154437
+    brain: 
+    tier: T2
+    set:
+    - path: red/Brain/GardenNeuralGenomeGene/sourceRun
+      value: Logs/EvoSim/runs/K03_KingdomsNeural-cap20_nomut-s4-20261126-154437
+    - path: blue/Brain/GardenNeuralGenomeGene/sourceRun
+      value: Logs/EvoSim/runs/K03_KingdomsNeural-cap20_nomut-s4-20261126-154437
+    remove: []
+  - name: src-cap20_nomut-s5-20261126-154457
+    brain: 
+    tier: T2
+    set:
+    - path: red/Brain/GardenNeuralGenomeGene/sourceRun
+      value: Logs/EvoSim/runs/K03_KingdomsNeural-cap20_nomut-s5-20261126-154457
+    - path: blue/Brain/GardenNeuralGenomeGene/sourceRun
+      value: Logs/EvoSim/runs/K03_KingdomsNeural-cap20_nomut-s5-20261126-154457
+    remove: []
+  - name: src-cap20_nomut-s6-20261126-154517
+    brain: 
+    tier: T2
+    set:
+    - path: red/Brain/GardenNeuralGenomeGene/sourceRun
+      value: Logs/EvoSim/runs/K03_KingdomsNeural-cap20_nomut-s6-20261126-154517
+    - path: blue/Brain/GardenNeuralGenomeGene/sourceRun
+      value: Logs/EvoSim/runs/K03_KingdomsNeural-cap20_nomut-s6-20261126-154517
+    remove: []
+  - name: src-cap20_nomut-s7-20261126-154537
+    brain: 
+    tier: T2
+    set:
+    - path: red/Brain/GardenNeuralGenomeGene/sourceRun
+      value: Logs/EvoSim/runs/K03_KingdomsNeural-cap20_nomut-s7-20261126-154537
+    - path: blue/Brain/GardenNeuralGenomeGene/sourceRun
+      value: Logs/EvoSim/runs/K03_KingdomsNeural-cap20_nomut-s7-20261126-154537
+    remove: []
+  - name: src-cap20_nomut-s8-20261126-154558
+    brain: 
+    tier: T2
+    set:
+    - path: red/Brain/GardenNeuralGenomeGene/sourceRun
+      value: Logs/EvoSim/runs/K03_KingdomsNeural-cap20_nomut-s8-20261126-154558
+    - path: blue/Brain/GardenNeuralGenomeGene/sourceRun
+      value: Logs/EvoSim/runs/K03_KingdomsNeural-cap20_nomut-s8-20261126-154558
+    remove: []
+  - name: src-cap20_nomut-s9-20261126-154618
+    brain: 
+    tier: T2
+    set:
+    - path: red/Brain/GardenNeuralGenomeGene/sourceRun
+      value: Logs/EvoSim/runs/K03_KingdomsNeural-cap20_nomut-s9-20261126-154618
+    - path: blue/Brain/GardenNeuralGenomeGene/sourceRun
+      value: Logs/EvoSim/runs/K03_KingdomsNeural-cap20_nomut-s9-20261126-154618
+    remove: []
   seeds: 010000000200000003000000
   ticks: 3000
   brain: 

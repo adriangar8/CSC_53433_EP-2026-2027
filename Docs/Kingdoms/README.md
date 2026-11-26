@@ -7,6 +7,7 @@ Shared knowledge base for the team (Karl, Adrian, Prakhar) and our AI tools. Sho
 | [DESIGN.md](DESIGN.md) | Current concept (draft, will change) |
 | [CONVENTIONS.md](CONVENTIONS.md) | Rules for humans and AI agents working in this repo |
 | [CHECKLIST.md](CHECKLIST.md) | Grading grid as a tracker (status, owner, evidence) |
+| [EVOLUTION.md](EVOLUTION.md) | Evidence that soldiers evolve (common garden, trends), limits, how to rerun |
 | [UNITY-MCP.md](UNITY-MCP.md) | Optional: let Claude Code drive the Unity Editor |
 
 ## Where things live
