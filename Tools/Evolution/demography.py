@@ -74,6 +74,8 @@ def analyse(run, warmup):
             "max_gen": max([e["gen"] for e in mine if e["kind"] == "birth"], default=0),
             "adult_death_share": sum(d["age"] >= maturity for d in deaths) / len(deaths) if deaths else 0.0,
             "median_age_at_death": statistics.median(d["age"] for d in deaths) if deaths else 0.0,
+            "starve_share": sum(d.get("cause") == "starvation" for d in deaths) / len(deaths) if deaths else 0.0,
+            "mean_pop": statistics.mean(pops) if pops else 0.0,
             "kills": kills[sp],
             "at_floor": sum(p <= floor for p in pops) / len(pops) if pops else 0.0,
             "at_cap": sum(p >= cap for p in pops) / len(pops) if pops else 0.0,
@@ -110,15 +112,15 @@ def main():
     by = lambda v, sp=None: [r for r in rows if r["variant"] == v and (sp is None or r["species"] == sp)]
 
     print(f"Warm-up t0 = {args.warmup}. Cells are mean (min-max) over seeds.\n")
-    print("| variant | species | seeds | births | immigrants | births/imm | max gen | adult deaths | median age at death | kills | at floor | at cap |")
-    print("|---|---|---|---|---|---|---|---|---|---|---|---|")
+    print("| variant | species | seeds | births | immigrants | births/imm | max gen | adult deaths | median age at death | starved | mean pop | kills | at floor | at cap |")
+    print("|---|---|---|---|---|---|---|---|---|---|---|---|---|---|")
     for v in variants:
         for sp in species:
             g = by(v, sp)
             print(f"| {v} | {sp} | {len(g)} | {fmt([r['births'] for r in g])} | {fmt([r['immigrants'] for r in g])} | "
                   f"{fmt([r['birth_ratio'] for r in g], 2)} | {fmt([r['max_gen'] for r in g], 0)} | "
                   f"{fmt([r['adult_death_share'] for r in g], 2)} | {fmt([r['median_age_at_death'] for r in g], 0)} | "
-                  f"{fmt([r['kills'] for r in g], 0)} | {fmt([r['at_floor'] for r in g], 2)} | {fmt([r['at_cap'] for r in g], 2)} |")
+                  f"{fmt([r['starve_share'] for r in g], 2)} | {fmt([r['mean_pop'] for r in g])} | {fmt([r['kills'] for r in g], 0)} | {fmt([r['at_floor'] for r in g], 2)} | {fmt([r['at_cap'] for r in g], 2)} |")
 
     print("\nBorn share = births / (births + immigrants) after t0; self-sustaining = share of whole 500-tick windows after t0 with no immigrant.\n")
     print("| variant | species | born share mean (min over seeds) | self-sustaining mean (min) | kill ratio per seed |")
