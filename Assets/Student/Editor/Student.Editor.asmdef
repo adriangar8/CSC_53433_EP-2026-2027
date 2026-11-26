@@ -1,6 +1,6 @@
 {
     "name": "Student.Editor",
-    "references": ["Student", "EvoSim.Runtime", "EvoSim.Editor"],
+    "references": ["Student", "EvoSim.Runtime", "EvoSim.Editor", "EvoSim.Neuro"],
     "includePlatforms": ["Editor"],
     "autoReferenced": false
 }
