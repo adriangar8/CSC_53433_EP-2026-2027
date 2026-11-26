@@ -36,7 +36,7 @@ Death-rate ratio (95 % CI), pooled over 3 seeds and both armies, for the 10 `cap
 | | evolved / founder | drifted / founder | source runs with the evolved CI below 1 |
 |---|---|---|---|
 | Mutating sources, pooled | **0.63 (0.56–0.71)** | 0.94 (0.84–1.05) | **7 of 10** |
-| No-mutation sources, pooled | 0.76 (0.68–0.85) | 0.97 (0.87–1.09) | 4 of 10 |
+| No-mutation sources, pooled | 0.76 (0.68–0.85) | 0.97 (0.87–1.09) † | 4 of 10 |
 
 Per source run (seed of the source run; evolved/founder, drifted/founder):
 
@@ -45,7 +45,9 @@ Per source run (seed of the source run; evolved/founder, drifted/founder):
 | mutating, evolved | 0.69 | 0.48 | 0.71 | 0.59 | 0.53 | 0.58 | 0.86 | 0.55 | 0.69 | 0.71 |
 | mutating, drifted | 1.01 | 0.99 | 1.12 | 1.09 | 0.76 | 0.86 | 0.78 | 0.97 | 0.84 | 1.00 |
 | no mutation, evolved | 0.95 | 0.51 | **1.60** | 0.64 | 0.82 | 0.85 | 0.52 | 0.56 | 0.75 | 0.78 |
-| no mutation, drifted | 1.08 | 0.85 | 1.27 | 1.07 | 0.94 | 1.05 | 0.81 | 1.04 | 0.72 | 0.89 |
+| no mutation, drifted † | 1.08 | 0.85 | 1.27 | 1.07 | 0.94 | 1.05 | 0.81 | 1.04 | 0.72 | 0.89 |
+
+† In no-mutation sources there are no mutations to copy (k = 0), so this group is a second set of founder networks, not a mutation control.
 
 Evolved soldiers also leave about 2–9 times the offspring of founder soldiers, and 74–91 % of the living soldiers' ancestry at the end is evolved (mutating sources). Kaplan–Meier curves: ![mutating sources](img/garden-km-full-sources.png) ![no-mutation sources](img/garden-km-nomut-sources.png)
 
