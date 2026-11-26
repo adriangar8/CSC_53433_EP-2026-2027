@@ -1,15 +1,17 @@
 """Learning trends of neural Kingdoms runs: per army and 1000-tick window, does the population change over time?
 
 Usage, from anywhere (paths are relative to the repo root):
-    python3 Tools/Evolution/neural_trends.py RUN_FOLDER ... [--window 1000] [--no-plots]
+    python3 Tools/Evolution/neural_trends.py RUN_FOLDER ... [--window 1000] [--role winner|loser|all] [--no-plots]
 
 Per run (events.jsonl, stats.csv, run_info.json) and army (species), per window:
   pop (soldier-ticks / window), mean_gen, born_share (share of the living that were born, not founders or immigrants,
   sampled every 100 ticks), stop_share, speed, meals_per_tick (from stats.csv), kills_per_capita and starve_hazard (both
   per soldier per window), births_per_soldier.
-Writes Logs/EvoSim/trends-<timestamp>.csv (one row per run x army x window), one PNG per metric under Logs/EvoSim/plots/
-(mean line and min-max band over seeds and both armies, one colour per variant; needs matplotlib, else only the CSV), and
-prints, per variant, the first and last window mean of each metric and in how many runs both armies reached max gen >= 10.
+Each army is a `winner` (the higher mean generation in the run's last window; red on a tie) or a `loser`.
+Writes Logs/EvoSim/trends-<timestamp>.csv (one row per run x army x window, all roles, with the role), one PNG per metric
+under Logs/EvoSim/plots/ (mean line and min-max band over the runs of --role, default winner; one colour per variant; needs
+matplotlib, else only the CSV), and prints, per variant, the first and last window mean of each metric for that role and in
+how many runs both armies reached max gen >= 10.
 """
 
 import argparse
@@ -75,10 +77,15 @@ def analyse(run, window):
                 "starve_hazard": starved / per_soldier if per_soldier else float("nan"),
                 "births_per_soldier": births / per_soldier if per_soldier else float("nan"),
             })
+    last = max(r["window_start"] for r in rows)
+    final = {r["army"]: r["mean_gen"] for r in rows if r["window_start"] == last}
+    top = max(sorted(final), key=lambda a: final[a])                 # sorted: the first army wins a tie
+    for r in rows:
+        r["role"] = "winner" if r["army"] == top else "loser"
     return variant, seed, rows, max_gen
 
 
-def plot(rows, out_dir, stamp):
+def plot(rows, out_dir, stamp, role):
     try:
         import matplotlib
         matplotlib.use("Agg")
@@ -104,10 +111,10 @@ def plot(rows, out_dir, stamp):
             ax.fill_between(xs, [min(by_t[x]) for x in xs], [max(by_t[x]) for x in xs], color=colour, alpha=0.15)
         ax.set_xlabel("tick")
         ax.set_ylabel(m)
-        ax.set_title(f"{m}: mean and min-max over seeds and both armies")
+        ax.set_title(f"{m}: mean and min-max over runs ({role})")
         ax.legend()
         fig.tight_layout()
-        path = out_dir / f"{stamp}-{m}.png"
+        path = out_dir / f"{stamp}-{role}-{m}.png"
         fig.savefig(path, dpi=110)
         plt.close(fig)
         written.append(path)
@@ -118,6 +125,7 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("runs", nargs="+", help="run folders")
     ap.add_argument("--window", type=int, default=1000)
+    ap.add_argument("--role", choices=["winner", "loser", "all"], default="winner", help="armies in the table and plots (default winner)")
     ap.add_argument("--no-plots", action="store_true")
     args = ap.parse_args()
 
@@ -132,14 +140,17 @@ def main():
     if not rows:
         print("no finished run found")
         return
+    all_rows = rows
     stamp = time.strftime("%Y%m%d-%H%M%S")
     out = ROOT / "Logs/EvoSim" / f"trends-{stamp}.csv"
     with open(out, "w", newline="") as f:
-        w = csv.DictWriter(f, fieldnames=list(rows[0]))
+        w = csv.DictWriter(f, fieldnames=list(all_rows[0]))
         w.writeheader()
-        w.writerows(rows)
+        w.writerows(all_rows)
 
-    print(f"Window {args.window} ticks. First and last window, mean over runs and both armies.\n")
+    if args.role != "all":
+        rows = [r for r in rows if r["role"] == args.role]
+    print(f"Window {args.window} ticks. First and last window, mean over the {args.role} armies of the runs.\n")
     print("| variant | runs | both armies evolved (max gen >= 10) | " + " | ".join(METRICS) + " |")
     print("|---|---|---|" + "---|" * len(METRICS))
     for v in dict.fromkeys(r["variant"] for r in rows):
@@ -153,7 +164,7 @@ def main():
         print(f"| {v} | {len(evolved[v])} | {sum(evolved[v])} of {len(evolved[v])} | " + " | ".join(cells) + " |")
     print(f"\nwritten: {out.relative_to(ROOT)}")
     if not args.no_plots:
-        for p in plot(rows, ROOT / "Logs/EvoSim/plots", stamp):
+        for p in plot(rows, ROOT / "Logs/EvoSim/plots", stamp, args.role):
             print(f"plot: {p.relative_to(ROOT)}")
 
 
