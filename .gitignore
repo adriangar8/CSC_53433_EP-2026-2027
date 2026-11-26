@@ -75,3 +75,6 @@ crashlytics-build.properties
 
 # EvoSim model servers: personal settings
 Tools/EvoSimServers/servers.local.env
+
+# Python
+__pycache__/
